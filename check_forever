@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+use strict;
+
+chomp( my @lines = `forever list --plain | tail -n +3` );
+
+my( $command, $uptime );
+my $warn;
+my @data;
+
+foreach (@lines) {
+    m{usr/local/bin/node\s(\S+).*(\d+):(\d+):(\d+):\d+\.\d+};
+    my($days, $hours, $mins) = ($2, $3, $4);
+    $command = $1;
+    $uptime = $mins + $hours * 60 + $days * 1440;
+    push @data, [$command, $uptime];
+    
+    $warn = $warn || ($uptime < 10);
+}
+
+print $warn ? "WARNING uptime too low" : "OK";
+print " - ", "$_->[0] up ", "$_->[1] min" foreach @data;
+print "\n";
+
+exit 1 if $warn;

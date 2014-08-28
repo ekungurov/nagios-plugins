@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+use strict;
+
+my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+
+if (( $mday == 1 ) and ( $hour == 9 )) {
+    print "WARNING - today is 1st day of month";
+    exit 1;
+} else {
+    print "OK - today is a typical day";
+    exit 0;
+}
